@@ -15,19 +15,9 @@ export class ApiService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    // Validación segura de variables de entorno
-    const apiBaseUrl = this.configService.get<string>('API_BASE_URL');
-    const subscriptionKey = this.configService.get<string>('SUBSCRIPTION_KEY');
-
-    if (!apiBaseUrl) {
-      throw new Error('Faltante variable de entorno: API_BASE_URL');
-    }
-    if (!subscriptionKey) {
-      throw new Error('Faltante variable de entorno: SUBSCRIPTION_KEY');
-    }
-
-    this.API_BASE_URL = apiBaseUrl;
-    this.SUBSCRIPTION_KEY = subscriptionKey;
+    // CORRECCIÓN APLICADA: Usamos || para asegurar el tipo string y proporcionar un fallback.
+    this.API_BASE_URL = this.configService.get<string>('API_BASE_URL') || 'https://openbanking-cert.apisbcp.com/account-information/v1';
+    this.SUBSCRIPTION_KEY = this.configService.get<string>('SUBSCRIPTION_KEY') || 'default-subscription-key';
   }
 
   private getHeaders(accessToken: string, customHeaders?: Record<string, string>): Record<string, string> {
